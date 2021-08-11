@@ -1,7 +1,6 @@
-import express, { Request, response, Response } from 'express';
-import axios, { AxiosError } from 'axios';
+import express, { Request, Response } from 'express';
+import axios from 'axios';
 import sharp, { Sharp } from 'sharp';
-import fs from 'fs';
 
 const app = express();
 
@@ -20,30 +19,31 @@ app.get('/', async(req: Request, res: Response) => {
       .get(fileURL, { responseType: 'arraybuffer' })
       .then(res => Buffer.from(res.data, 'binary'));
 
-      let thumbnail: Buffer = await sharp(imageBuffer).resize(100, 67).toBuffer();
+    let thumbnail: Buffer = await sharp(imageBuffer).resize(100, 67).toBuffer();
 
-      let image: Sharp = await sharp(imageBuffer)
-        .resize(300, 200)
-        .composite([{
-          input: thumbnail,
-          left: 0,
-          top: 200 - 67
-        }])
+    let image: Sharp = sharp(imageBuffer)
+      .resize(300, 200)
+      .composite([{
+        input: thumbnail,
+        left: 0,
+        top: 200 - 67
+      }])
+      .webp({quality: 100})
 
-      await image.toFile('out.webp');
+    let resultImageBuffer: Promise<Buffer> = image.toBuffer();
 
-      fs.readFile('out.webp', (err:  NodeJS.ErrnoException, data: Buffer) => {
-        if (err) throw err;
+    await Promise.all([image.toFile('out.webp'), resultImageBuffer]);
 
-        res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        res.end(data);
-      })
-      return;
+    resultImageBuffer.then((buffer: Buffer) => {
+      res.writeHead(200, {'Content-Type': 'image/webp'});
+
+      res.end(buffer, 'binary');
+    })
+
   } catch (error) {
     res.status(422).send(error.message).end();
     return;
   }
-
 });
 
 export default app;
