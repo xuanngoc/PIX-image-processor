@@ -4,12 +4,12 @@
   "description": "",
   "main": "./dist/server.js",
   "scripts": {
-    "build-ts": "tsc",
+    "build-ts": "npx tsc",
     "build": "npm run build-ts",
     "serve": "node dist/server.js",
     "start": "npm run serve",
     "watch-node": "nodemon dist/server.js",
-    "watch-ts": "tsc -w"
+    "watch-ts": "npx tsc -w"
   },
   "keywords": [],
   "author": "",
