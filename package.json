@@ -20,13 +20,14 @@
     "global": "^4.4.0",
     "got": "^11.8.2",
     "nodemon": "^2.0.12",
-    "sharp": "^0.28.3"
-  },
-  "devDependencies": {
+    "sharp": "^0.28.3",
+
     "@types/express": "^4.17.13",
     "@types/node": "^16.4.13",
     "@types/sharp": "^0.28.5",
     "ts-node": "^10.2.0",
     "typescript": "^4.3.5"
+  },
+  "devDependencies": {
   }
 }
